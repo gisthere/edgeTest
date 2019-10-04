@@ -4,13 +4,13 @@ services:
   sensor:
     build: sensor/
 
-  manipulator:
-    build: manipulator/
-
-  web:
-    build: webServer/
-    ports:
-      - 80:8080
-      -
-  controller:
-    build: controller/
+#  manipulator:
+#    build: manipulator/
+#
+#  web:
+#    build: webServer/
+#    ports:
+#      - 80:8080
+#      -
+#  controller:
+#    build: controller/

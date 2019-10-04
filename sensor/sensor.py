@@ -14,6 +14,7 @@ def send_data(payload):
         'payload': payload
     }
     requests.post(f'http://{CONTROLLER_DOMAIN}/input', data=data)
+    print(1)
 
 
 if __name__ == '__main__':
