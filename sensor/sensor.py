@@ -7,6 +7,7 @@ from sensor.utils import debounce
 
 CONTROLLER_DOMAIN = 'sensor'
 
+
 @debounce(100)
 def send_data(payload):
     data = {
@@ -14,7 +15,7 @@ def send_data(payload):
         'payload': payload
     }
     requests.post(f'http://{CONTROLLER_DOMAIN}/input', data=data)
-    print(1)
+    print('tick')
 
 
 if __name__ == '__main__':
