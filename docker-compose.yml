@@ -1,9 +1,12 @@
-version: 3
+version: "3"
 
 services:
   sensor:
     build: sensor/
-
+    volumes:
+      - ./sensor/:/app
+    depends_on:
+      - controller
 #  manipulator:
 #    build: manipulator/
 #
@@ -12,5 +15,30 @@ services:
 #    ports:
 #      - 80:8080
 #      -
-#  controller:
-#    build: controller/
+
+  controller-db:
+    image: postgres:10.4-alpine
+    environment:
+      POSTGRES_DB: "main"
+      POSTGRES_USER: "main"
+      POSTGRES_PASSWORD: "main"
+    restart: "no"
+    volumes:
+      - "db:/var/lib/postgresql/data"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready U postgres"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+
+
+  controller:
+    build: controller/
+    command: bash -c "python manage.py db upgrade && python manage.py runserver"
+    volumes:
+      - ./controller/:/app
+    depends_on:
+      - controller-db
+
+volumes:
+  db:

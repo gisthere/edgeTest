@@ -3,23 +3,26 @@ import random
 
 import requests
 
-from sensor.utils import debounce
+from utils import debounce
 
-CONTROLLER_DOMAIN = 'sensor'
+CONTROLLER_DOMAIN = 'controller:5000'
 
-
+i = 0
 @debounce(100)
 def send_data(payload):
+    global i
     data = {
         'datetime': datetime.datetime.now(),
         'payload': payload
     }
-    requests.post(f'http://{CONTROLLER_DOMAIN}/input', data=data)
-    print('tick')
+    try:
+        requests.post(f'http://{CONTROLLER_DOMAIN}/input', data=data)
+    except:
+        pass
 
 
 if __name__ == '__main__':
     while True:
-        send_data(random.randint())
+        send_data(random.randint(0, 5))
 
 
