@@ -31,6 +31,28 @@ services:
       timeout: 30s
       retries: 3
 
+  controller-redis:
+    image: 'redis:3.2.0-alpine'
+    restart: "no"
+
+  controller-celery-worker:
+    build: controller/
+    command: celery -A app.celery worker -l info
+    restart: "no"
+
+    volumes:
+      - ./controller:/app
+    depends_on:
+      - controller-redis
+
+  controller-celery-beat:
+    build: controller/
+    command: celery -A app.celery beat -l info --max-interval 1
+    volumes:
+      - ./controller:/app
+    depends_on:
+      - controller-redis
+
 
   controller:
     build: controller/
@@ -39,6 +61,6 @@ services:
       - ./controller/:/app
     depends_on:
       - controller-db
-
+      - controller-redis
 volumes:
   db:
