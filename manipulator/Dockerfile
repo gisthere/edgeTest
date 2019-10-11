@@ -14,5 +14,6 @@ RUN pip install -r requirements.txt --no-cache-dir
 
 COPY . .
 ##This bolerplate can be avoided using base images.
+EXPOSE 5005
 
-
+CMD ["python", "manipulator.py"]

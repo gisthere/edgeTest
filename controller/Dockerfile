@@ -9,10 +9,10 @@ WORKDIR /app
 USER $MOD_WSGI_USER:$MOD_WSGI_GROUP
 
 RUN pip install --upgrade pip
+EXPOSE 5000
 
 COPY ./requirements.txt .
 RUN pip install -r requirements.txt --no-cache-dir
 
 COPY . .
 
-EXPOSE 5000

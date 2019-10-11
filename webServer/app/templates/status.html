@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Status</title>
+</head>
+<body>
+<button onclick="getStatus()">Get status</button>
+<div><span>Status is:</span><span id="status"></span></div>
+<script>
+    function getStatus() {
+        fetch('/?data=1').then(async (res) => {
+            console.log(res);
+            let el = document.getElementById('status');
+            let json = await res.json();
+            el.innerText = json['status'];
+        })
+    }
+</script>
+</body>
+</html>

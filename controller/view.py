@@ -5,8 +5,6 @@ from flask import request
 from tasks import proceed_request
 
 @app.route('/input', methods=['POST'])
-def hello_world():
+def get_sensor():
     proceed_request.delay(request.form)
-    print('request')
-
-    return 'Hello World!'
+    return 'Ok'

@@ -1,20 +1,29 @@
-version: "3"
+version: "3.7"
 
 services:
   sensor:
     build: sensor/
+    deploy:
+      replicas: 8
     volumes:
       - ./sensor/:/app
     depends_on:
       - controller
-#  manipulator:
-#    build: manipulator/
-#
-#  web:
-#    build: webServer/
-#    ports:
-#      - 80:8080
-#      -
+  manipulator:
+    build: manipulator/
+    volumes:
+      - ./manipulator/:/app
+  #
+  web:
+    build: webServer/
+    command: bash -c "python manage.py db migrate && python manage.py db upgrade && python manage.py runserver"
+    volumes:
+      - ./webServer:/app
+    ports:
+      - 80:5000
+    depends_on:
+      - web-db
+
 
   controller-db:
     image: postgres:10.4-alpine
@@ -24,12 +33,29 @@ services:
       POSTGRES_PASSWORD: "main"
     restart: "no"
     volumes:
-      - "db:/var/lib/postgresql/data"
+      - "controller-db:/var/lib/postgresql/data"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready U postgres"]
       interval: 30s
       timeout: 30s
       retries: 3
+
+
+  web-db:
+    image: postgres:10.4-alpine
+    environment:
+      POSTGRES_DB: "web"
+      POSTGRES_USER: "web"
+      POSTGRES_PASSWORD: "web"
+    restart: "no"
+    volumes:
+      - "web-db:/var/lib/postgresql/data"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready U postgres"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+
 
   controller-redis:
     image: 'redis:3.2.0-alpine'
@@ -37,30 +63,35 @@ services:
 
   controller-celery-worker:
     build: controller/
-    command: celery -A app.celery worker -l info
+    command: celery -A app.celery worker -l info --concurrency=1
     restart: "no"
-
+    deploy:
+      replicas: 8
     volumes:
       - ./controller:/app
     depends_on:
       - controller-redis
+      - manipulator
+      - web
 
   controller-celery-beat:
     build: controller/
-    command: celery -A app.celery beat -l info --max-interval 1
+    command: bash -c "rm -f /opt/celeryd.pid && celery -A app.celery beat -l info --max-interval 1 --pidfile=/opt/celeryd.pid"
     volumes:
       - ./controller:/app
     depends_on:
       - controller-redis
 
-
   controller:
     build: controller/
-    command: bash -c "python manage.py db upgrade && python manage.py runserver"
+    command: bash -c "python manage.py db migrate && python manage.py db upgrade && python manage.py runserver"
     volumes:
       - ./controller/:/app
     depends_on:
       - controller-db
       - controller-redis
+      - web
+
 volumes:
-  db:
+  controller-db:
+  web-db:

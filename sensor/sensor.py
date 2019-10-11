@@ -1,5 +1,6 @@
 import datetime
 import random
+import socket
 
 import requests
 
@@ -7,13 +8,15 @@ from utils import debounce
 
 CONTROLLER_DOMAIN = 'controller:5000'
 
-i = 0
+sensor_name = socket.gethostname()
+
+
 @debounce(100)
 def send_data(payload):
-    global i
     data = {
         'datetime': datetime.datetime.now(),
-        'payload': payload
+        'payload': payload,
+        'sensor': sensor_name
     }
     try:
         requests.post(f'http://{CONTROLLER_DOMAIN}/input', data=data)

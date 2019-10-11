@@ -4,3 +4,4 @@ Flask-SQLAlchemy==2.1
 Flask-Migrate==1.8.0
 celery==4.3.0
 redis==3.3.8
+requests==2.22.0

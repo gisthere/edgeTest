@@ -10,3 +10,5 @@ class Settings:
     CELERY_BROKER_URL = 'redis://controller-redis:6379'
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    MANIPULATE_INTERVAl = 5
