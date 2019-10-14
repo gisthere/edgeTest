@@ -11,13 +11,14 @@ CONTROLLER_DOMAIN = 'controller:5000'
 sensor_name = socket.gethostname()
 
 
-@debounce(100)
+@debounce(10)
 def send_data(payload):
     data = {
         'datetime': datetime.datetime.now(),
         'payload': payload,
         'sensor': sensor_name
     }
+    print(payload)
     try:
         requests.post(f'http://{CONTROLLER_DOMAIN}/input', data=data)
     except:

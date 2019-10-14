@@ -13,10 +13,10 @@ services:
     build: manipulator/
     volumes:
       - ./manipulator/:/app
-  #
+
   web:
     build: webServer/
-    command: bash -c "python manage.py db migrate && python manage.py db upgrade && python manage.py runserver"
+    command: bash -c "python manage.py create_tables && python manage.py runserver"
     volumes:
       - ./webServer:/app
     ports:
@@ -63,7 +63,7 @@ services:
 
   controller-celery-worker:
     build: controller/
-    command: celery -A app.celery worker -l info --concurrency=1
+    command: celery -A app.celery worker -l info --concurrency=16
     restart: "no"
     deploy:
       replicas: 8
@@ -84,7 +84,7 @@ services:
 
   controller:
     build: controller/
-    command: bash -c "python manage.py db migrate && python manage.py db upgrade && python manage.py runserver"
+    command: bash -c "python manage.py create_tables && python manage.py runserver"
     volumes:
       - ./controller/:/app
     depends_on:
