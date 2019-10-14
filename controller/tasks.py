@@ -39,6 +39,8 @@ def manipulate():
     with sock as conn:
         conn.send(res_bytes)
     requests.post('http://web:5000/manipulator', data=manipulator_data)
+    db.session.query(Measure).filter(Measure.datetime < interval_ago).delete()
+    db.session.commit()
 
 
 @celery.task(time_limit=interval-1, soft_time_limit=1)
@@ -48,7 +50,3 @@ def proceed_request(form):
                           name=form['sensor'])
     db.session.add(new_measure)
     db.session.commit()
-    interval_ago = datetime.datetime.utcnow() - datetime.timedelta(seconds=5)
-    print(db.session \
-        .query(Measure) \
-        .filter(Measure.datetime > interval_ago).count())
