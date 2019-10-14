@@ -48,4 +48,7 @@ def proceed_request(form):
                           name=form['sensor'])
     db.session.add(new_measure)
     db.session.commit()
-    print(form)
+    interval_ago = datetime.datetime.utcnow() - datetime.timedelta(seconds=5)
+    print(db.session \
+        .query(Measure) \
+        .filter(Measure.datetime > interval_ago).count())

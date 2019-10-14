@@ -4,8 +4,8 @@ from app import db
 class Measure(db.Model):
     __tablename__ = 'measure'
 
-    id = db.Column(db.Integer, primary_key=True)
-    datetime = db.Column(db.DateTime())
+    id = db.Column(db.Integer, primary_key=True, index=True)
+    datetime = db.Column(db.DateTime(), index=True)
     payload = db.Column(db.Integer)
     sensor_name = db.Column(db.String(12))
 

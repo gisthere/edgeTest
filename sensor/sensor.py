@@ -11,7 +11,7 @@ CONTROLLER_DOMAIN = 'controller:5000'
 sensor_name = socket.gethostname()
 
 
-@debounce(10)
+@debounce(20)
 def send_data(payload):
     data = {
         'datetime': datetime.datetime.now(),
