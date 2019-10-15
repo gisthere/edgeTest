@@ -34,4 +34,22 @@ if __name__ == '__main__':
                 print(addr)
         except Exception as e:
             print(e)
-            break
+            break  # если возникнет исключение, то манипулятор сдохнет( А в докер композе не прописано, чтобы он автоматически перезапускался.
+                   # в продакшн коде это нужно учитывать.
+
+    # Наверное хотелось сделать обработку любых исключений, которые не являются  ConnectionResetError? Если да, то можно было сделать примерно так:
+    # while True:
+    #     try:
+    #         data = conn.recv(1024)
+    #         if data == b'':
+    #             raise ConnectionResetError()
+    #         proceed_data(data)
+    #     except ConnectionResetError:
+    #         conn.close()
+    #         print('reconnect')
+    #         conn, addr = s.accept()
+    #         print('Connection address:')
+    #         print(addr)
+    #     except Exception as e:
+    #         print(e)
+    #         break

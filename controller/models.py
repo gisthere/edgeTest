@@ -14,6 +14,7 @@ class Measure(db.Model):
         self.payload = payload
         self.sensor_name = name
 
-    def __repr__(self):
+    def __repr__(self):  # тут лучше использовать __str__,  не __repr__.
+                         # https://stackoverflow.com/questions/1436703/difference-between-str-and-repr
         return f'{self.id} {self.datetime} {self.payload} {self.sensor_name}'
 

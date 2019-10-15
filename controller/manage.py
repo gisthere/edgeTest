@@ -21,7 +21,7 @@ def create_tables():
             db.create_all()
             res = True
         except Exception as e:
-            print(e)
+            print(e)  # Для логгирования лучше всего использовать logging API, а не пртинты
             tries += 1
             time.sleep(1)
 
