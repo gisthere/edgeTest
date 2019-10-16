@@ -23,7 +23,7 @@ class Connection:
     def __eq__(self, other: 'Connection'):
         return self.address == other.address and self.port == other.port
 
-    def __hash__(self):
+    def __hash__(self):  # Можно было бы придумать вариант без коллизий
         result = 0
         for c in self.address:
             result += ord(c)

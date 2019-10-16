@@ -1,3 +1,7 @@
+"""
+Нет комментариев
+"""
+
 from celery import Celery
 
 from flask import Flask

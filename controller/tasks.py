@@ -1,7 +1,7 @@
 import datetime
 import json
 
-import redis
+import redis  # зачем тут redis?
 import requests
 from sqlalchemy import func
 
@@ -24,7 +24,7 @@ def manipulate():
         .filter(Measure.datetime > interval_ago)\
         .group_by(Measure.sensor_name) \
         .all()
-    threshold = 2.5
+    threshold = 2.5  # Это можно было вынести за пределы функции
     thrasholded_sensors = 0
     for sensor in result:
         if sensor[1] > threshold:
